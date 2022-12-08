@@ -17,7 +17,7 @@ $(document).ready(()=>{
     $(document).on('click', '.deleteProd', function(e){
         e.preventDefault()
         var prodID = $(this).attr('id')
-
+        console.log(prodID);
         deleteProduct(prodID)
     })
 
@@ -102,6 +102,7 @@ const deleteProduct = (prodID) => {
             productid: prodID
         },
         success: function(data) {
+            console.log(data);
             if (data == "200") {
                 alert("Product deleted successfully");
                 $('#products').load(location.href + ' #products')
@@ -113,6 +114,8 @@ const deleteProduct = (prodID) => {
 }
 
 const addProduct = () => {
+    var randomNum = Math.floor(Math.random() * 5)
+    var prodIMG = '/public/images/' + randomNum + '.jpg'
     $.ajax({
         type: 'POST',
         url: '../src/php/router.php',
@@ -120,9 +123,11 @@ const addProduct = () => {
             choice: 'addproduct',
             productname: $('#productname').val(),
             price: $('#price').val(),
-            qty: $('#qty').val()
+            qty: $('#qty').val(),
+            img_path: prodIMG
         },
         success: function(data) {
+            console.log(data);
             if(data == "200"){
                 $('#productname').val('')
                 $('#price').val('')
@@ -188,17 +193,15 @@ const viewProductSeller =()=>{
             var json = JSON.parse(data);
             var str = ""
             json.forEach(element => {
-                var x = Math.floor(Math.random() * (250 - 100 + 1) + 100)
-                var y = Math.floor(Math.random() * (300 - 200 + 1) + 200)
                 str += '<div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 mt-4">' +
                         '<div class="card shadow">'+
                             '<div class="card-body text-center">'+
-                                '<a href="#"><img class="card-img-top" src="https://picsum.photos/'+ x +'/'+ y +'/?random" alt=""></a>'+
+                            '<a href="#"><img class="card-img-top" src="..'+element.img+'" alt=""></a>'+
                                 '<a class="text-reset" href="#"><h6 class="card-title display-3">'+ element.productname +'</h6></a>'+
                                 '<h4><i class="fa-solid fa-peso-sign"></i>'+ element.price +'</h4>'+
                                 '<p>Stock: '+ element.quantity +' </p>'+
                                 '<a class="btn btn-dark my-2 addStock" href="#" role="button" id="'+ element.quantity +"."+ element.id +'" data-bs-toggle="modal" data-bs-target="#addStockModal">Add Stock</a>'+
-                                '<a class="btn btn-danger my-2 ms-2 deleteProd" href="#" role="button" data-id="'+element.id+'">Remove</a>'+
+                                '<a class="btn btn-danger my-2 ms-2 deleteProd" href="#" role="button" id="'+element.id+'">Remove</a>'+
                             '</div>'+
                         '</div>'+
                     '</div>'
@@ -220,12 +223,10 @@ const viewProductCustomer = () =>{
             var json = JSON.parse(data);
             var str = ""
             json.forEach(element => {
-                var x = Math.floor(Math.random() * (250 - 100 + 1) + 100)
-                var y = Math.floor(Math.random() * (300 - 200 + 1) + 200)
                 str += '<div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 mt-4">' +
                         '<div class="card shadow">'+
                             '<div class="card-body text-center">'+
-                                '<a href="#"><img class="card-img-top" src="https://picsum.photos/'+ x +'/'+ y +'/?random" alt=""></a>'+
+                                '<a href="#"><img class="card-img-top" src="..'+element.img+'" alt=""></a>'+
                                 '<a class="text-reset" href="#"><h3 class="card-title display-5">'+ element.productname +'</h3></a>'+
                                 '<h4><i class="fa-solid fa-peso-sign"></i> '+ element.price +' each</h4>'+
                                 '<p>Stock: '+ element.quantity +' </p>'+

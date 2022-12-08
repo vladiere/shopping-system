@@ -5,18 +5,6 @@ $(document).ready(() => {
         logout()
     })
 
-    // $(document).on('click', '.checkOut', (e) => {
-    //     e.preventDefault()
-    //     var tmpID = $(this).attr('id')
-    //     console.log(tmpID);
-    //     var arr = tmpID.split('.')
-    //     if (confirm('Confirm Check Out')) {
-    //         checkOutMyProduct(arr[0], arr[1])
-    //     } else {
-    //         alert('You just canceled your delivery')
-    //     }
-    // })
-
 })
 
 const checkOut = (prodID, sellerID) => {
@@ -107,12 +95,10 @@ const viewDeliveryOrder = () => {
             var json = JSON.parse(data);
             var str = ""
             json.forEach(element => {
-                var x = Math.floor(Math.random() * (250 - 100 + 1) + 100)
-                var y = Math.floor(Math.random() * (300 - 200 + 1) + 200)
                 str += '<div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 mt-4">' +
                         '<div class="card shadow">'+
                             '<div class="card-body text-center">'+
-                                '<a href="#"><img class="card-img-top" src="https://picsum.photos/'+ x +'/'+ y +'/?random" alt=""></a>'+
+                            '<a href="#"><img class="card-img-top" src="..'+element.img+'" alt=""></a>'+
                                 '<a class="text-reset" href="#"><h6 class="card-title display-3">'+ element.productname +'</h6></a>'+
                                 '<h4><i class="fa-solid fa-peso-sign"></i>'+ element.total_price +'</h4>'+
                                 '<p>Stock: '+ element.quantity +' </p>'+
@@ -139,12 +125,10 @@ const viewMyCart = () => {
             var json = JSON.parse(data);
             var str = ""
             json.forEach(element => {
-                var x = Math.floor(Math.random() * (250 - 100 + 1) + 100)
-                var y = Math.floor(Math.random() * (300 - 200 + 1) + 200)
                 str += '<div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 mt-4">' +
                         '<div class="card shadow">'+
                             '<div class="card-body text-center">'+
-                                '<a href="#"><img class="card-img-top" src="https://picsum.photos/'+ x +'/'+ y +'/?random" alt=""></a>'+
+                                '<a href="#"><img class="card-img-top" src="..'+element.img+'" alt=""></a>'+
                                 '<a class="text-reset" href="#"><h6 class="card-title display-3">'+ element.productname +'</h6></a>'+
                                 '<h4><i class="fa-solid fa-peso-sign"></i>'+ element.total_price +'</h4>'+
                                 '<p>Stock: '+ element.quantity +' </p>'+

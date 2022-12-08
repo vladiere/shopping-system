@@ -10,8 +10,8 @@
             return self::registerAccount($role, $fullname, $contact, $email, $password);
         }
     
-        public function addProducts($productname, $price, $qty){
-            return self::addProduct($productname, $price, $qty);
+        public function addProducts($productname, $price, $qty, $img_path){
+            return self::addProduct($productname, $price, $qty, $img_path);
         }
         public function viewProduct(){
             return self::getProduct();
@@ -222,7 +222,7 @@
                         $db = new database();
                         if ($db->getStatus()) {
                             $stmt = $db->getConn()->prepare($this->addToCartQuery());
-                            $stmt->execute(array($var[0], $var[1], $this->getId(), $var[2], $var[3] * $qty, $qty, $this->getCurrentDate()));
+                            $stmt->execute(array($var[0], $var[1], $this->getId(), $var[2], $var[3] * $qty, $qty, $var[5], $this->getCurrentDate()));
     
                             $result = $stmt->fetch();
                             if (!$result) {
@@ -354,33 +354,29 @@
             }
         }
 
-        private function addProduct($productname, $price, $quantity){
+        private function addProduct($productname, $price, $quantity, $img_path){
             try {
-                try {
-                    if ($this->checkLogin($_SESSION["email"], $_SESSION["password"])) {
-                        $db = new database();
-                        if ($db->getStatus()) {
-                            $stmt = $db->getConn()->prepare($this->addProductQuery());
-                            $stmt->execute(array($this->getId(),$productname, $price, $quantity,$this->getCurrentDate()));
-                            $result = $stmt->fetch();
-                            if (!$result) {
-                                $db->closeConn();
-                                return "200";
-                            }else{
-                                $db->closeConn();
-                                return "404";
-                            }
+                if ($this->checkLogin($_SESSION["email"], $_SESSION["password"])) {
+                    $db = new database();
+                    if ($db->getStatus()) {
+                        $stmt = $db->getConn()->prepare($this->addProductQuery());
+                        $stmt->execute(array($this->getId(),$productname, $price, $quantity, $img_path, $this->getCurrentDate()));
+                        $result = $stmt->fetch();
+                        if (!$result) {
+                            $db->closeConn();
+                            return "200";
                         }else{
-                            return "403";
+                            $db->closeConn();
+                            return "404";
                         }
-                    } else {
+                    }else{
                         return "403";
                     }
-                } catch (PDOException $th) {
-                    return "501";
+                } else {
+                    return "403";
                 }
             } catch (PDOException $th) {
-                return "501";
+                return $th;
             }
         }
 
@@ -483,11 +479,12 @@
                         while ($var = $stmt->fetch()) {
                             array_push(
                                 $product,
-                                $var['id'],         //0
-                                $var['sellerID'],   //1
-                                $var['productname'],//2
-                                $var['price'],      //3
-                                $var['quantity']    //4
+                                $var['id'],             //0
+                                $var['sellerID'],       //1
+                                $var['productname'],    //2
+                                $var['price'],          //3
+                                $var['quantity'],       //4
+                                $var['img']             //5
                             );
                         }
                         return $product;
@@ -566,6 +563,7 @@
                                 $row['productname'],//0
                                 $row['quantity'],   //1
                                 $row['total_price'],//2
+                                $row['img'],        //3
                             );
                         }
                         $db->closeConn();
@@ -657,12 +655,12 @@
 
         private function addToCartQuery()
         {
-            return "INSERT INTO `checked_products` (`productID`, `sellerID`, `customerID`, `productname`, `total_price`, `quantity`, `date_checked`) VALUES (?,?,?,?,?,?,?)";
+            return "INSERT INTO `checked_products` (`productID`, `sellerID`, `customerID`, `productname`, `total_price`, `quantity`, `img`, `date_checked`) VALUES (?,?,?,?,?,?,?,?)";
         }
 
         private function addProductQuery(){
-            return "INSERT INTO `products` (`sellerID`, `productname`, `price`, `quantity`, `date_added`) 
-                    VALUES (?,?,?,?,?)";
+            return "INSERT INTO `products` (`sellerID`, `productname`, `price`, `quantity`, `img`, `date_added`) 
+                    VALUES (?,?,?,?,?,?)";
         }
 
         private function deleteFromBuyerQuery()

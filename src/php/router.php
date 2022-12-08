@@ -18,7 +18,7 @@
                 break;
             case 'addproduct':
                 $back = new backend();
-                echo $back->addProducts($_POST["productname"], $_POST["price"], $_POST["qty"]);
+                echo $back->addProducts($_POST["productname"], $_POST["price"], $_POST["qty"], $_POST["img_path"]);
                 break;
             case 'viewproduct':
                 $back = new backend();

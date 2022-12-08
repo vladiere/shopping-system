@@ -16,7 +16,7 @@ var doRequest = () => {
             email: $('#email').val(),
             contact: $('#contact').val(),
             password: $('#password').val(),
-            role: $('#role').val()
+            role: 'customer'
         },
         success: function(data) {
             if (data == "200") {
@@ -25,7 +25,6 @@ var doRequest = () => {
                 $('#contact').val('')
                 $('#password').val('')
                 $('#password2').val('')
-                $('#role').val(0)
                 alert('Registration successful')
             }
         },
@@ -34,7 +33,7 @@ var doRequest = () => {
 }
 
 var checkValid = () => {
-    if ($('#role').val() != 0 && $('#fullname').val() != '' && $('#email').val() != '' && $('#contact').val() != '' && $('#password').val() != '' && $('#password2').val() != '' ){
+    if ($('#fullname').val() != '' && $('#email').val() != '' && $('#contact').val() != '' && $('#password').val() != '' && $('#password2').val() != '' ){
         if ($('#password').val() == $('#password2').val()) {
             return true
         } else {
