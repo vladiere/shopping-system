@@ -23,6 +23,7 @@ $(document).ready(()=>{
 
     $(document).on('click', '.addStock', function(e){
         e.preventDefault()
+
         var stocks = $(this).attr('id')
         var arr = stocks.split('.')
         curStock = arr[0]
@@ -33,10 +34,6 @@ $(document).ready(()=>{
         addStock(tmpID, curStock)
     })
 
-    $(document).on('click', '.btn', (e) => {
-        e.preventDefault()
-        $('.btn-addStock').attr('id', 'addCart')
-    })
 
     $(document).on('click', '#addCart', (e) => {
         var tmpQty = $('#stock').val()
@@ -62,6 +59,7 @@ const addToMyCart = (id, qty) => {
         success: function(data){
             if (data == '200') {
                 $('#stock').val('')
+                $('.modal-header #exampleModalLabel').remove()
                 alert('Add to cart successfully')
                 $('#products').load(location.href + ' #products')
                 loginRole()
@@ -84,6 +82,7 @@ const addStock = (tmpID,curStock) => {
         success: function(data) {
             if (data == "200") {
                 $('#stock').val('')
+                $('.modal-header #exampleModalLabel').remove()
                 alert("Stock was successfully added")
                 $('#products').load(location.href + ' #products')
                 loginRole()
@@ -163,17 +162,19 @@ const loginRole = () => {
         success: function(data) {
             if (data == "seller") {
                 $('#menu a').remove()
-                $('.modal-header').prepend('<h1 class="modal-title fs-5" id="exampleModalLabel">Add Stock</h1>')
                 $('#menu').append('<li class="nav-item"><a class="nav-link" href="../public/mycart.html" id="deliver">Sold Products</a></li>')
                 $('#menu').append('<li class="nav-item"><a class="nav-link" href=".#?" id="addproduct" data-bs-toggle="modal" data-bs-target="#addModal">Add Product</a></li>')
                 $('#menu').append('<li class="nav-item"><a class="nav-link" href=".#?" id="logout">Logout</a></li>')
                 viewProductSeller()
+                $('.modal-header').prepend('<h1 class="modal-title fs-5" id="exampleModalLabel">Add Stock</h1>')
             } else if(data == "customer"){
                 $('#menu a').remove()
-                $('.modal-header').prepend('<h1 class="modal-title fs-5" id="exampleModalLabel">Add to my cart</h1>')
                 $('#menu').append('<li class="nav-item"><a class="nav-link" href="../public/mycart.html" id="mycar">My Cart</a></li>')
                 $('#menu').append('<li class="nav-item"><a class="nav-link" href=".#?" id="logout">Logout</a></li>')
+                $('.btn-addStock').attr('id', 'addCart')
                 viewProductCustomer()
+                $('.modal-header').prepend('<h1 class="modal-title fs-5" id="exampleModalLabel">Add to cart</h1>')
+                
             } else {
                 window.location.href = '../'
             }
